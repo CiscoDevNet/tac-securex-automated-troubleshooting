@@ -9,6 +9,19 @@
       {
         "schema_id": "datatype.string",
         "properties": {
+          "value": "admin@devlit-1860-fmc:~$\nsudo su\nPassword:\nLast login: Thu Apr 28 14:47:45 UTC 2022 on pts/0\nroot@devlit-1860-fmc:/Volume/home/admin#\n208\t/var/lib/mysql/external_data\n8\t/var/lib/mysql/performance_schema\n10820\t/var/lib/mysql/mysql\n1328\t/var/lib/mysql/external_schema\n4262432\t/var/lib/mysql/sfsnort\n32\t/var/lib/mysql/Sourcefire\n4561752\t/var/lib/mysql\n1000000000\t/var/sf/updates\n18784\t/var/log/rabbitmq\n23688\t/var/log/monetdb\n4\t/var/log/vjdbc\n4\t/var/log/deploy_ts\n55604\t/var/log/sf\n36\t/var/log/SSE\n4\t/var/log/seshat\n30452\t/var/log/httpd\n140\t/var/log/connector\n19600\t/var/log/mojo\n4\t/var/log/eventds\n260\t/var/log/CSD\n883528\t/var/log",
+          "scope": "local",
+          "name": "L_df_output",
+          "type": "datatype.string",
+          "is_required": false,
+          "is_invisible": false
+        },
+        "unique_name": "variable_workflow_01XIQTUOO6PU37hE9v5eLRzajFB7vfXwBKZ",
+        "object_type": "variable_workflow"
+      },
+      {
+        "schema_id": "datatype.string",
+        "properties": {
           "value": "# Disk Space Checker Result",
           "scope": "output",
           "name": "O_report_markdown",
@@ -18,19 +31,6 @@
           "is_invisible": false
         },
         "unique_name": "variable_workflow_01WOLLDHMSULS5zklSmhn1lSXlUlZGihZml",
-        "object_type": "variable_workflow"
-      },
-      {
-        "schema_id": "datatype.string",
-        "properties": {
-          "value": "admin@devlit-1860-fmc:~$\nsudo su\nPassword:\nLast login: Thu Apr 28 14:47:45 UTC 2022 on pts/0\nroot@devlit-1860-fmc:/Volume/home/admin#\n208\t/var/lib/mysql/external_data\n8\t/var/lib/mysql/performance_schema\n10820\t/var/lib/mysql/mysql\n1328\t/var/lib/mysql/external_schema\n4262432\t/var/lib/mysql/sfsnort\n32\t/var/lib/mysql/Sourcefire\n4561752\t/var/lib/mysql\n1000000000\t/var/sf/updates\n18784\t/var/log/rabbitmq\n23688\t/var/log/monetdb\n4\t/var/log/vjdbc\n4\t/var/log/deploy_ts\n55604\t/var/log/sf\n36\t/var/log/SSE\n4\t/var/log/seshat\n30452\t/var/log/httpd\n140\t/var/log/connector\n19600\t/var/log/mojo\n4\t/var/log/eventds\n260\t/var/log/CSD\n883528\t/var/log",
-          "scope": "local",
-          "name": "L_df_output",
-          "type": "datatype.string",
-          "is_required": false,
-          "is_invisible": false
-        },
-        "unique_name": "variable_workflow_01XIQTUOO6PU37hE9v5eLRzajFB7vfXwBKZ",
         "object_type": "variable_workflow"
       }
     ],
@@ -94,12 +94,12 @@
       {
         "unique_name": "definition_activity_01XIQU1AKXV4629Zd7ztczjFnnapzEbZ8Fd",
         "name": "Set Variables",
-        "title": "Set Variables",
+        "title": "set output var",
         "type": "core.set_multiple_variables",
         "base_type": "activity",
         "properties": {
           "continue_on_failure": false,
-          "display_name": "Set Variables",
+          "display_name": "set output var",
           "skip_execution": false,
           "variables_to_update": [
             {
