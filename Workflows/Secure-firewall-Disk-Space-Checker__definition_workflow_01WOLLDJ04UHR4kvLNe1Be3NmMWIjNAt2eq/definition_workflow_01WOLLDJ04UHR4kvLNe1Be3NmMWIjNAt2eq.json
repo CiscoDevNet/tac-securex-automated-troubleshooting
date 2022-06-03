@@ -9,7 +9,7 @@
       {
         "schema_id": "datatype.string",
         "properties": {
-          "value": "admin@devlit-1860-fmc:~$\nsudo su\nPassword:\nLast login: Thu Apr 28 14:47:45 UTC 2022 on pts/0\nroot@devlit-1860-fmc:/Volume/home/admin#\n208\t/var/lib/mysql/external_data\n8\t/var/lib/mysql/performance_schema\n10820\t/var/lib/mysql/mysql\n1328\t/var/lib/mysql/external_schema\n4262432\t/var/lib/mysql/sfsnort\n32\t/var/lib/mysql/Sourcefire\n4561752\t/var/lib/mysql\n1000000000\t/var/sf/updates\n18784\t/var/log/rabbitmq\n23688\t/var/log/monetdb\n4\t/var/log/vjdbc\n4\t/var/log/deploy_ts\n55604\t/var/log/sf\n36\t/var/log/SSE\n4\t/var/log/seshat\n30452\t/var/log/httpd\n140\t/var/log/connector\n19600\t/var/log/mojo\n4\t/var/log/eventds\n260\t/var/log/CSD\n883528\t/var/log",
+          "value": "admin@devlit-1860-fmc:~$\nsudo su\nPassword:\nLast login: Thu Apr 28 14:47:45 UTC 2022 on pts/0\nroot@devlit-1860-fmc:/Volume/home/admin#\n690M\t/var/lib/mysql\n36M\t/var/sf/updates\n103M\t/var/log\n5.8G\t/var/sf/cloud_download",
           "scope": "local",
           "name": "L_df_output",
           "type": "datatype.string",
@@ -63,9 +63,12 @@
         "properties": {
           "action_timeout": 180,
           "command_timeout": 120,
-          "commands": "expert\nsudo su \n\ndu --max-depth=1 /var/lib/mysql /var/sf/updates /var/log /ngfw/var/log /ngfw/var/sf 2\u003e/dev/null\necho result=$?",
+          "commands": "expert\n#sudo su \n\ndu -h --max-depth=0 /var/lib/mysql /var/sf/updates /ngfw/var/sf/updates /var/log /ngfw/var/log /ngfw/var/sf /ngfw/var/sf/cloud_download /var/sf/cloud_download 2\u003e/dev/null\necho result=$?",
           "continue_on_failure": false,
           "display_name": "list directory sizes",
+          "failed_completed": [
+            "derpSorry, try again\\."
+          ],
           "merge_commands": false,
           "runtime_user": {
             "override_target_runtime_user": false,
@@ -111,27 +114,6 @@
         "object_type": "definition_activity"
       },
       {
-        "unique_name": "definition_activity_01WOZUFKTXHCP5tjN8S3EKbONtdwkkfd0pt",
-        "name": "Split String",
-        "title": "Split String",
-        "type": "core.splitstring",
-        "base_type": "activity",
-        "properties": {
-          "boundaries": [
-            {
-              "boundary": "(?m)^(\\d+)\\s+([^\\s]+)$"
-            }
-          ],
-          "continue_on_failure": false,
-          "display_name": "Split String",
-          "input_string": "$workflow.definition_workflow_01WOLLDJ04UHR4kvLNe1Be3NmMWIjNAt2eq.local.variable_workflow_01XIQTUOO6PU37hE9v5eLRzajFB7vfXwBKZ$",
-          "remove_empty": true,
-          "skip_execution": false,
-          "use_regexp": true
-        },
-        "object_type": "definition_activity"
-      },
-      {
         "unique_name": "definition_activity_01XIQYUFATNP66MKeQjTdSc0opHVSpExiBP",
         "name": "Match Regex",
         "title": "check updates dir",
@@ -140,7 +122,7 @@
         "properties": {
           "continue_on_failure": false,
           "display_name": "check updates dir",
-          "input_regex": "[1-9]\\d{9,}\\s+\\/var\\/sf\\/updates",
+          "input_regex": "(?m)^\\s*([5-9](\\.\\d+)|[5-9]|[1-9]\\d+(\\.\\d+)?)G\\s+(\\/ngfw)?\\/var\\/sf\\/updates",
           "input_string": "$workflow.definition_workflow_01WOLLDJ04UHR4kvLNe1Be3NmMWIjNAt2eq.local.variable_workflow_01XIQTUOO6PU37hE9v5eLRzajFB7vfXwBKZ$",
           "skip_execution": false
         },
@@ -162,7 +144,7 @@
           {
             "unique_name": "definition_activity_01XIR29K78YHF7kgmkYngyhhPJMlz5wi70u",
             "name": "Condition Branch",
-            "title": "if updates dir \u003e= 10GB",
+            "title": "if updates dir \u003e= 5GB",
             "type": "logic.condition_block",
             "base_type": "activity",
             "properties": {
@@ -172,7 +154,7 @@
                 "right_operand": true
               },
               "continue_on_failure": false,
-              "display_name": "if updates dir \u003e= 10GB",
+              "display_name": "if updates dir \u003e= 5GB",
               "skip_execution": false
             },
             "object_type": "definition_activity",
@@ -180,17 +162,87 @@
               {
                 "unique_name": "definition_activity_01XIR35Y3R0JA2Cnjhs42Tj4LWDNf2XT0Vg",
                 "name": "Set Variables",
-                "title": "Set Variables",
+                "title": "update report",
                 "type": "core.set_multiple_variables",
                 "base_type": "activity",
                 "properties": {
                   "continue_on_failure": false,
-                  "display_name": "Set Variables",
+                  "display_name": "update report",
                   "skip_execution": false,
                   "variables_to_update": [
                     {
                       "variable_to_update": "$workflow.definition_workflow_01WOLLDJ04UHR4kvLNe1Be3NmMWIjNAt2eq.output.variable_workflow_01WOLLDHMSULS5zklSmhn1lSXlUlZGihZml$",
-                      "variable_value_new": "$workflow.definition_workflow_01WOLLDJ04UHR4kvLNe1Be3NmMWIjNAt2eq.output.variable_workflow_01WOLLDHMSULS5zklSmhn1lSXlUlZGihZml$\n## Large Amount of Update files\nThis FMC has 10GB or more of files in the /var/sf/updates directory. You should consider removing old updates that are no longer needed."
+                      "variable_value_new": "$workflow.definition_workflow_01WOLLDJ04UHR4kvLNe1Be3NmMWIjNAt2eq.output.variable_workflow_01WOLLDHMSULS5zklSmhn1lSXlUlZGihZml$\n## Large Amount of Update files\nThis FMC has 5GB or more of files in the /var/sf/updates directory. You should consider removing old updates that are no longer needed."
+                    }
+                  ]
+                },
+                "object_type": "definition_activity"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "unique_name": "definition_activity_01XJ63YF1PD8I4uFh9HLZQzQUW7ILcGLxUp",
+        "name": "Match Regex",
+        "title": "check cloud_downloads dir",
+        "type": "core.matchregex",
+        "base_type": "activity",
+        "properties": {
+          "continue_on_failure": false,
+          "display_name": "check cloud_downloads dir",
+          "input_regex": "(?m)^\\s*([5-9](\\.\\d+)|[5-9]|[1-9]\\d+(\\.\\d+)?)G\\s+(\\/ngfw)?\\/var\\/sf\\/cloud_download",
+          "input_string": "$workflow.definition_workflow_01WOLLDJ04UHR4kvLNe1Be3NmMWIjNAt2eq.local.variable_workflow_01XIQTUOO6PU37hE9v5eLRzajFB7vfXwBKZ$",
+          "skip_execution": false
+        },
+        "object_type": "definition_activity"
+      },
+      {
+        "unique_name": "definition_activity_01XJ60DYBY39O5Qh1rnUWLfa3XOWBedgNlP",
+        "name": "Condition Block",
+        "title": "check cloud_download size",
+        "type": "logic.if_else",
+        "base_type": "activity",
+        "properties": {
+          "continue_on_failure": false,
+          "description": "checks /ngfw/var/sf/cloud_download",
+          "display_name": "check cloud_download size",
+          "skip_execution": false
+        },
+        "object_type": "definition_activity",
+        "blocks": [
+          {
+            "unique_name": "definition_activity_01XJ60DYBZBJF2CTpHJ8HLLgAjEutEVEBWT",
+            "name": "Condition Branch",
+            "title": "if size \u003e= 5GB",
+            "type": "logic.condition_block",
+            "base_type": "activity",
+            "properties": {
+              "condition": {
+                "left_operand": "$activity.definition_activity_01XJ63YF1PD8I4uFh9HLZQzQUW7ILcGLxUp.output.has_match$",
+                "operator": "eq",
+                "right_operand": true
+              },
+              "continue_on_failure": false,
+              "display_name": "if size \u003e= 5GB",
+              "skip_execution": false
+            },
+            "object_type": "definition_activity",
+            "actions": [
+              {
+                "unique_name": "definition_activity_01XJ60DYC1Y0U18UELzBjQBflsMnlBgoHE6",
+                "name": "Set Variables",
+                "title": "update report",
+                "type": "core.set_multiple_variables",
+                "base_type": "activity",
+                "properties": {
+                  "continue_on_failure": false,
+                  "display_name": "update report",
+                  "skip_execution": false,
+                  "variables_to_update": [
+                    {
+                      "variable_to_update": "$workflow.definition_workflow_01WOLLDJ04UHR4kvLNe1Be3NmMWIjNAt2eq.output.variable_workflow_01WOLLDHMSULS5zklSmhn1lSXlUlZGihZml$",
+                      "variable_value_new": "$workflow.definition_workflow_01WOLLDJ04UHR4kvLNe1Be3NmMWIjNAt2eq.output.variable_workflow_01WOLLDHMSULS5zklSmhn1lSXlUlZGihZml$\n## Large Amount of Cloud Download files\nThis FMC has 5GB or more of files in the /ngfw/var/sf/cloud_download directory. This could mean the device is possibly hitting bug [CSCwb78323](https://bst.cisco.com/quickview/bug/CSCwb78323). Files may build up in here if the SFDataCorrelator process is not running. See the [bug notes](https://bst.cisco.com/quickview/bug/CSCwb78323) for additional information and a workaround which will help clear space"
                     }
                   ]
                 },
@@ -248,6 +300,7 @@
       "base_type": "runtime_user",
       "object_type": "definition_runtime_user",
       "properties": {
+        "admin_password": "*****",
         "description": "FMC hosted in AWS",
         "display_name": "devlit-1860-fmc-aws",
         "key": "*****",
