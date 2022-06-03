@@ -9,19 +9,6 @@
       {
         "schema_id": "datatype.string",
         "properties": {
-          "value": "admin@devlit-1860-fmc:~$\nsudo su\nPassword:\nLast login: Thu Apr 28 14:47:45 UTC 2022 on pts/0\nroot@devlit-1860-fmc:/Volume/home/admin#\n690M\t/var/lib/mysql\n36M\t/var/sf/updates\n103M\t/var/log\n5.8G\t/var/sf/cloud_download",
-          "scope": "local",
-          "name": "L_df_output",
-          "type": "datatype.string",
-          "is_required": false,
-          "is_invisible": false
-        },
-        "unique_name": "variable_workflow_01XIQTUOO6PU37hE9v5eLRzajFB7vfXwBKZ",
-        "object_type": "variable_workflow"
-      },
-      {
-        "schema_id": "datatype.string",
-        "properties": {
           "value": "# Disk Space Checker Result",
           "scope": "output",
           "name": "O_report_markdown",
@@ -31,6 +18,19 @@
           "is_invisible": false
         },
         "unique_name": "variable_workflow_01WOLLDHMSULS5zklSmhn1lSXlUlZGihZml",
+        "object_type": "variable_workflow"
+      },
+      {
+        "schema_id": "datatype.string",
+        "properties": {
+          "value": "admin@devlit-1860-fmc:~$\nsudo su\nPassword:\nLast login: Thu Apr 28 14:47:45 UTC 2022 on pts/0\nroot@devlit-1860-fmc:/Volume/home/admin#\n690M\t/var/lib/mysql\n36M\t/var/sf/updates\n103M\t/var/log\n5.8G\t/var/sf/cloud_download",
+          "scope": "local",
+          "name": "L_df_output",
+          "type": "datatype.string",
+          "is_required": false,
+          "is_invisible": false
+        },
+        "unique_name": "variable_workflow_01XIQTUOO6PU37hE9v5eLRzajFB7vfXwBKZ",
         "object_type": "variable_workflow"
       }
     ],
@@ -48,8 +48,7 @@
       },
       "target": {
         "target_type": "terminal.endpoint",
-        "target_id": "definition_target_01XIQT3H3XY3V3HVh0KHYbK29DPZ99Upgjk",
-        "execute_on_workflow_target": true
+        "specify_on_workflow_start": true
       }
     },
     "object_type": "definition_workflow",
@@ -266,46 +265,6 @@
       "base_type": "category",
       "category_type": "custom",
       "object_type": "category"
-    }
-  },
-  "targets": {
-    "definition_target_01XIQT3H3XY3V3HVh0KHYbK29DPZ99Upgjk": {
-      "unique_name": "definition_target_01XIQT3H3XY3V3HVh0KHYbK29DPZ99Upgjk",
-      "name": "devlit-1860-fmc-aws",
-      "title": "devlit-1860-fmc-aws",
-      "type": "terminal.endpoint",
-      "base_type": "target",
-      "object_type": "definition_target",
-      "properties": {
-        "default_runtime_user_id": "definition_runtime_user_01XIQM760UPU37XB1ObhQRl4cRmo8MH6ndF",
-        "description": "FMC hosted in AWS",
-        "display_name": "devlit-1860-fmc-aws",
-        "host": "52.87.102.60",
-        "port": 22,
-        "prompt_pattern": "\u003e|\\$|#",
-        "protocol": "ssh",
-        "succeeded_prompt_patterns": [
-          "\\$",
-          "#"
-        ]
-      }
-    }
-  },
-  "runtime_users": {
-    "definition_runtime_user_01XIQM760UPU37XB1ObhQRl4cRmo8MH6ndF": {
-      "unique_name": "definition_runtime_user_01XIQM760UPU37XB1ObhQRl4cRmo8MH6ndF",
-      "name": "devlit-1860-fmc-aws",
-      "title": "devlit-1860-fmc-aws",
-      "type": "runtime_user.terminal_key_credentials",
-      "base_type": "runtime_user",
-      "object_type": "definition_runtime_user",
-      "properties": {
-        "admin_password": "*****",
-        "description": "FMC hosted in AWS",
-        "display_name": "devlit-1860-fmc-aws",
-        "key": "*****",
-        "user": "admin"
-      }
     }
   },
   "variables": {
