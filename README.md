@@ -1,6 +1,8 @@
 # Cisco TAC SecureX Automated Troubleshooting
-This repository provides workflows that can be run in Cisco SecureX. The primary purpose of the workflows in this repository are for troubleshooting issues with Cisco Products.  
+This repository provides workflows that can be run in [Cisco SecureX](https://ciscosecurity.github.io/sxo-05-security-workflows/). The primary purpose of the workflows in this repository are for troubleshooting issues with Cisco Products or providing additional data to Cisco TAC.  
 Note: This project is still in the PoC phase and is not currently recommended for use unless directly advised by Cisco TAC.
+
+See the [List of available workflows](#list-of-available-workflows).
 
 # Quickstart
 The recommended basics steps to get started are:
@@ -56,5 +58,6 @@ https://dillinger.io/ (not a Cisco owned app).
 
 # List of Available Workflows
 
-## [Secure Firewall Disk Space Checker](Workflows/Secure-firewall-Disk-Space-Checker__definition_workflow_01WOLLDJ04UHR4kvLNe1Be3NmMWIjNAt2eq)
-
+### [Secure Firewall - Disk Space Checker](Workflows/Secure-firewall-Disk-Space-Checker__definition_workflow_01WOLLDJ04UHR4kvLNe1Be3NmMWIjNAt2eq)
+### [Secure Firewall - Failed Upgrade Assist](Workflows/secure-firewall-failed-upgrade-assist__definition_workflow_01XOUI8ATT29656EnGVknXNKIhGtnfCG7l5  )
+### [Secure Firewall - System Processes Checker](Workflows/secure-firewall-check-system-processes__definition_workflow_01XP2CTH28WDE6ehN1SvwKA6eZSyADbwGfc)
