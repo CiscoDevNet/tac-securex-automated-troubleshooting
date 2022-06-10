@@ -1,0 +1,344 @@
+{
+  "workflow": {
+    "unique_name": "definition_workflow_01XP2CTH28WDE6ehN1SvwKA6eZSyADbwGfc",
+    "name": "Secure Firewall - Check System Processes",
+    "title": "Secure Firewall - Check System Processes",
+    "type": "generic.workflow",
+    "base_type": "workflow",
+    "variables": [
+      {
+        "schema_id": "datatype.string",
+        "properties": {
+          "value": "",
+          "scope": "local",
+          "name": "L_pmtool_status_output",
+          "type": "datatype.string",
+          "is_required": false,
+          "is_invisible": false
+        },
+        "unique_name": "variable_workflow_01XP2CTHNPLXN059HjuMwBKf67Xq5Tb3taZ",
+        "object_type": "variable_workflow"
+      },
+      {
+        "schema_id": "datatype.string",
+        "properties": {
+          "value": "# System Processes Check",
+          "scope": "output",
+          "name": "O_report_markdown",
+          "type": "datatype.string",
+          "description": "the output report in mardown ",
+          "is_required": false,
+          "is_invisible": false
+        },
+        "unique_name": "variable_workflow_01XP2CTHNP5OT7WRURoLWdTW5gGzaL7us6Q",
+        "object_type": "variable_workflow"
+      },
+      {
+        "schema_id": "datatype.string",
+        "properties": {
+          "value": "",
+          "scope": "local",
+          "name": "L_procs_down_or_waiting",
+          "type": "datatype.string",
+          "is_required": false,
+          "is_invisible": false
+        },
+        "unique_name": "variable_workflow_01XP2J517YDUD6T0wrMJblQEGVmQKP22P54",
+        "object_type": "variable_workflow"
+      }
+    ],
+    "properties": {
+      "atomic": {
+        "is_atomic": false
+      },
+      "delete_workflow_instance": false,
+      "description": "Checks system processes of a Secure Firewall device.",
+      "display_name": "Secure Firewall - Check System Processes",
+      "runtime_user": {
+        "override_target_runtime_user": false,
+        "specify_on_workflow_start": false,
+        "target_default": true
+      },
+      "target": {
+        "target_type": "terminal.endpoint",
+        "specify_on_workflow_start": true
+      }
+    },
+    "object_type": "definition_workflow",
+    "actions": [
+      {
+        "unique_name": "definition_activity_01XP2CTKF9WW10a394Z4P1KyebFY9aXdBGx",
+        "name": "Execute Terminal Command(s)",
+        "title": "check system processes",
+        "type": "terminal.command",
+        "base_type": "activity",
+        "properties": {
+          "action_timeout": 180,
+          "command_timeout": 30,
+          "commands": "expert\nsudo su\n\npmtool status |grep \" - \" | egrep -v \"Running|((sybase_arbiter|sfestreamer|fireamp|sfipmid|snmpd|vjdbc|dockerd|HostInput_Daemon).*Waiting)\"\necho result=$?",
+          "continue_on_failure": true,
+          "description": "result=1\nmeans no processes are down and no critical processes are waiting\n\nresult=0\nsomething is down or waiting that sholdn't be",
+          "display_name": "check system processes",
+          "merge_commands": true,
+          "runtime_user": {
+            "override_target_runtime_user": false,
+            "target_default": true
+          },
+          "skip_execution": false,
+          "succeeded_expects": [
+            "result=0",
+            "result=1"
+          ],
+          "target": {
+            "override_workflow_target": false,
+            "override_workflow_target_group_criteria": false,
+            "use_workflow_target": true,
+            "use_workflow_target_group": false
+          },
+          "user_responses": [
+            {
+              "user_expect": "Password:",
+              "user_response": "$global.variable_01WJQNV20NH863iba5EZBJZAaozbTnVZmPA.global.variable_01WJQNV20NH863iba5EZBJZAaozbTnVZmPA$"
+            }
+          ]
+        },
+        "object_type": "definition_activity"
+      },
+      {
+        "unique_name": "definition_activity_01XP2CTLQRG1W29fyHzfTwj3mCR6mv5KIyS",
+        "name": "Set Variables",
+        "title": "set output var",
+        "type": "core.set_multiple_variables",
+        "base_type": "activity",
+        "properties": {
+          "continue_on_failure": false,
+          "display_name": "set output var",
+          "skip_execution": false,
+          "variables_to_update": [
+            {
+              "variable_to_update": "$workflow.definition_workflow_01XP2CTH28WDE6ehN1SvwKA6eZSyADbwGfc.local.variable_workflow_01XP2CTHNPLXN059HjuMwBKf67Xq5Tb3taZ$",
+              "variable_value_new": "$activity.definition_activity_01XP2CTKF9WW10a394Z4P1KyebFY9aXdBGx.output.response_body$"
+            }
+          ]
+        },
+        "object_type": "definition_activity"
+      },
+      {
+        "unique_name": "definition_activity_01XP2RLIZAYEW5hhudGImBrNuyzMm8G6m95",
+        "name": "Condition Block",
+        "title": "if nothing found",
+        "type": "logic.if_else",
+        "base_type": "activity",
+        "properties": {
+          "continue_on_failure": false,
+          "display_name": "if nothing found",
+          "skip_execution": false
+        },
+        "object_type": "definition_activity",
+        "blocks": [
+          {
+            "unique_name": "definition_activity_01XP2RLJFZYNV1XqaGQXstxJpqwP3WSLwnA",
+            "name": "Condition Branch",
+            "title": "Condition Branch",
+            "type": "logic.condition_block",
+            "base_type": "activity",
+            "properties": {
+              "condition": {
+                "left_operand": "$workflow.definition_workflow_01XP2CTH28WDE6ehN1SvwKA6eZSyADbwGfc.local.variable_workflow_01XP2CTHNPLXN059HjuMwBKf67Xq5Tb3taZ$",
+                "operator": "mw",
+                "right_operand": "result=1"
+              },
+              "continue_on_failure": false,
+              "display_name": "Condition Branch",
+              "skip_execution": false
+            },
+            "object_type": "definition_activity",
+            "actions": [
+              {
+                "unique_name": "definition_activity_01XP2S71Q4NFP18KmF0w7BCboCZ1IHmNyud",
+                "name": "Set Variables",
+                "title": "update output report",
+                "type": "core.set_multiple_variables",
+                "base_type": "activity",
+                "properties": {
+                  "continue_on_failure": false,
+                  "display_name": "update output report",
+                  "skip_execution": false,
+                  "variables_to_update": [
+                    {
+                      "variable_to_update": "$workflow.definition_workflow_01XP2CTH28WDE6ehN1SvwKA6eZSyADbwGfc.output.variable_workflow_01XP2CTHNP5OT7WRURoLWdTW5gGzaL7us6Q$",
+                      "variable_value_new": "$workflow.definition_workflow_01XP2CTH28WDE6ehN1SvwKA6eZSyADbwGfc.output.variable_workflow_01XP2CTHNP5OT7WRURoLWdTW5gGzaL7us6Q$\nThere were no system problems found with the system processes."
+                    }
+                  ]
+                },
+                "object_type": "definition_activity"
+              },
+              {
+                "unique_name": "definition_activity_01XP2SB37AP5D3ZF2z76xbmxknorAmkiQLV",
+                "name": "Completed",
+                "title": "Completed",
+                "type": "logic.completed",
+                "base_type": "activity",
+                "properties": {
+                  "completion_type": "succeeded",
+                  "continue_on_failure": false,
+                  "display_name": "Completed",
+                  "result_message": "no problems found",
+                  "skip_execution": false
+                },
+                "object_type": "definition_activity"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "unique_name": "definition_activity_01XP2CTOTRMBT5HbKoyvtj4vZ5UWCMSc3KH",
+        "name": "Condition Block",
+        "title": "if tomcat found in list",
+        "type": "logic.if_else",
+        "base_type": "activity",
+        "properties": {
+          "continue_on_failure": false,
+          "display_name": "if tomcat found in list",
+          "skip_execution": false
+        },
+        "object_type": "definition_activity",
+        "blocks": [
+          {
+            "unique_name": "definition_activity_01XP2CTQ6W7VP67PTS6RsyKkdkzDnToEAT4",
+            "name": "Condition Branch",
+            "title": "then",
+            "type": "logic.condition_block",
+            "base_type": "activity",
+            "properties": {
+              "condition": {
+                "left_operand": "$workflow.definition_workflow_01XP2CTH28WDE6ehN1SvwKA6eZSyADbwGfc.local.variable_workflow_01XP2CTHNPLXN059HjuMwBKf67Xq5Tb3taZ$",
+                "operator": "mw",
+                "right_operand": "Tomcat"
+              },
+              "continue_on_failure": false,
+              "display_name": "then",
+              "skip_execution": false
+            },
+            "object_type": "definition_activity",
+            "actions": [
+              {
+                "unique_name": "definition_activity_01XP2CTRMIZAF2XZEsOpeu6tq6NnOGlNtcG",
+                "name": "Set Variables",
+                "title": "update down crit procs list",
+                "type": "core.set_multiple_variables",
+                "base_type": "activity",
+                "properties": {
+                  "continue_on_failure": false,
+                  "display_name": "update down crit procs list",
+                  "skip_execution": false,
+                  "variables_to_update": [
+                    {
+                      "variable_to_update": "$workflow.definition_workflow_01XP2CTH28WDE6ehN1SvwKA6eZSyADbwGfc.local.variable_workflow_01XP2J517YDUD6T0wrMJblQEGVmQKP22P54$",
+                      "variable_value_new": "$workflow.definition_workflow_01XP2CTH28WDE6ehN1SvwKA6eZSyADbwGfc.local.variable_workflow_01XP2J517YDUD6T0wrMJblQEGVmQKP22P54$\nTomcat"
+                    }
+                  ]
+                },
+                "object_type": "definition_activity"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "unique_name": "definition_activity_01XP2CTTEOH850Zpo4Hl5IcQ2cBvs196E3R",
+        "name": "Condition Block",
+        "title": "if procs down",
+        "type": "logic.if_else",
+        "base_type": "activity",
+        "properties": {
+          "continue_on_failure": false,
+          "display_name": "if procs down",
+          "skip_execution": false
+        },
+        "object_type": "definition_activity",
+        "blocks": [
+          {
+            "unique_name": "definition_activity_01XP2CTUSSR0B14WNin0f3hc4dgbf2TxDYY",
+            "name": "Condition Branch",
+            "title": "then",
+            "type": "logic.condition_block",
+            "base_type": "activity",
+            "properties": {
+              "condition": {
+                "left_operand": "$workflow.definition_workflow_01XP2CTH28WDE6ehN1SvwKA6eZSyADbwGfc.local.variable_workflow_01XP2J517YDUD6T0wrMJblQEGVmQKP22P54$",
+                "operator": "ne",
+                "right_operand": ""
+              },
+              "continue_on_failure": false,
+              "display_name": "then",
+              "skip_execution": false
+            },
+            "object_type": "definition_activity",
+            "actions": [
+              {
+                "unique_name": "definition_activity_01XP2CTWRXQZZ27uedtqCvpFmp01lGVpLgJ",
+                "name": "Set Variables",
+                "title": "update report",
+                "type": "core.set_multiple_variables",
+                "base_type": "activity",
+                "properties": {
+                  "continue_on_failure": false,
+                  "display_name": "update report",
+                  "skip_execution": false,
+                  "variables_to_update": [
+                    {
+                      "variable_to_update": "$workflow.definition_workflow_01XP2CTH28WDE6ehN1SvwKA6eZSyADbwGfc.output.variable_workflow_01XP2CTHNP5OT7WRURoLWdTW5gGzaL7us6Q$",
+                      "variable_value_new": "$workflow.definition_workflow_01XP2CTH28WDE6ehN1SvwKA6eZSyADbwGfc.output.variable_workflow_01XP2CTHNP5OT7WRURoLWdTW5gGzaL7us6Q$\n## Critical Processes Down, Waiting, or Disabled\nThe following processes were not in a `Running` status, which was not expected:\n$workflow.definition_workflow_01XP2CTH28WDE6ehN1SvwKA6eZSyADbwGfc.local.variable_workflow_01XP2J517YDUD6T0wrMJblQEGVmQKP22P54$\n"
+                    }
+                  ]
+                },
+                "object_type": "definition_activity"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "categories": [
+      "category_01WD9J2YL7S3T0fHxgMRYKdjaoEJJBGlpZB",
+      "category_01XJJB5R4MMQD1bTUBEZcf1JTjol9V0Z6MI"
+    ]
+  },
+  "categories": {
+    "category_01WD9J2YL7S3T0fHxgMRYKdjaoEJJBGlpZB": {
+      "unique_name": "category_01WD9J2YL7S3T0fHxgMRYKdjaoEJJBGlpZB",
+      "name": "Secure Firewall",
+      "title": "Secure Firewall",
+      "type": "basic.category",
+      "base_type": "category",
+      "category_type": "custom",
+      "object_type": "category"
+    },
+    "category_01XJJB5R4MMQD1bTUBEZcf1JTjol9V0Z6MI": {
+      "unique_name": "category_01XJJB5R4MMQD1bTUBEZcf1JTjol9V0Z6MI",
+      "name": "SSH",
+      "title": "SSH",
+      "type": "basic.category",
+      "base_type": "category",
+      "description": "This workflow requires an SSH connections to run.",
+      "category_type": "custom",
+      "object_type": "category"
+    }
+  },
+  "variables": {
+    "variable_01WJQNV20NH863iba5EZBJZAaozbTnVZmPA": {
+      "unique_name": "variable_01WJQNV20NH863iba5EZBJZAaozbTnVZmPA",
+      "properties": {
+        "value": "*****",
+        "scope": "global",
+        "name": "fmc_password",
+        "type": "datatype.secure_string",
+        "is_required": false,
+        "is_invisible": false
+      },
+      "object_type": "variable"
+    }
+  }
+}
